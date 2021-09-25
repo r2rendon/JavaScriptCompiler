@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31112.23
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JavaScriptCompiler", "JavaScriptCompiler\JavaScriptCompiler.csproj", "{3E61B5F1-E6CD-4E59-B613-F6FA77F30E3B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JavaScriptCompiler.Console", "JavaScriptCompiler\JavaScriptCompiler.Console.csproj", "{3E61B5F1-E6CD-4E59-B613-F6FA77F30E3B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JavaScriptCompiler.Lexer", "JavaScriptCompiler.Lexer\JavaScriptCompiler.Lexer.csproj", "{EC7D6C00-73BB-41FB-B8D1-6A1E67B1761B}"
 	ProjectSection(ProjectDependencies) = postProject
