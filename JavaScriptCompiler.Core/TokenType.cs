@@ -40,5 +40,13 @@ namespace JavaScriptCompiler.Core
         ForeachKeyword,
         WhileKeyword,
         FunctionKeyword,
+        Mod,
+        Distinct,
+        TrueKeyword,
+        FalseKeyword,
+        And,
+        Or,
+        Increment,
+        Decrement
     }
 }
