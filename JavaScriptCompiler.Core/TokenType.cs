@@ -33,6 +33,12 @@ namespace JavaScriptCompiler.Core
         Comma,
         BasicType,
         FloatKeyword,
-        StringKeyword
+        StringKeyword,
+        BoolKeyword,
+        DateTimeKeyword,
+        ClassKeyword,
+        ForeachKeyword,
+        WhileKeyword,
+        FunctionKeyword,
     }
 }
