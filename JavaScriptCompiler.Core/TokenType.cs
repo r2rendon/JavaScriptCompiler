@@ -47,6 +47,7 @@ namespace JavaScriptCompiler.Core
         And,
         Or,
         Increment,
-        Decrement
+        Decrement,
+        InKeyword
     }
 }
