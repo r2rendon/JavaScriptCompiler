@@ -21,6 +21,11 @@ namespace JavaScriptCompiler.Lexer
                 { "int", TokenType.IntKeyword },
                 { "float", TokenType.FloatKeyword },
                 { "string", TokenType.StringKeyword },
+                { "class", TokenType.ClassKeyword },
+                { "datetime", TokenType.DateTimeKeyword },
+                { "foreach", TokenType.DateTimeKeyword },
+                { "in", TokenType.InKeyword },
+                { "bool", TokenType.BoolKeyword }
             };
         }
 
