@@ -51,6 +51,7 @@ namespace JavaScriptCompiler.Core
         InKeyword,
         BoolConstant,
         LeftBracket,
-        RightBracket
+        RightBracket,
+        DateTimeConstant
     }
 }
