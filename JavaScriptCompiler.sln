@@ -3,17 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31112.23
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JavaScriptCompiler.Console", "JavaScriptCompiler\JavaScriptCompiler.Console.csproj", "{3E61B5F1-E6CD-4E59-B613-F6FA77F30E3B}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JavaScriptCompiler.Lexer", "JavaScriptCompiler.Lexer\JavaScriptCompiler.Lexer.csproj", "{EC7D6C00-73BB-41FB-B8D1-6A1E67B1761B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JavaScriptCompiler.Lexer", "JavaScriptCompiler.Lexer\JavaScriptCompiler.Lexer.csproj", "{EC7D6C00-73BB-41FB-B8D1-6A1E67B1761B}"
 	ProjectSection(ProjectDependencies) = postProject
 		{04E6CA22-A2DE-440E-88E1-4FC98377D10B} = {04E6CA22-A2DE-440E-88E1-4FC98377D10B}
 		{10DE214A-0179-457D-A4B3-8099F7F3C048} = {10DE214A-0179-457D-A4B3-8099F7F3C048}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JavaScriptCompiler.Core", "JavaScriptCompiler.Core\JavaScriptCompiler.Core.csproj", "{04E6CA22-A2DE-440E-88E1-4FC98377D10B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JavaScriptCompiler.Core", "JavaScriptCompiler.Core\JavaScriptCompiler.Core.csproj", "{04E6CA22-A2DE-440E-88E1-4FC98377D10B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JavaScriptCompiler.Parser", "JavaScriptCompiler.Parser\JavaScriptCompiler.Parser.csproj", "{10DE214A-0179-457D-A4B3-8099F7F3C048}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JavaScriptCompiler.Parser", "JavaScriptCompiler.Parser\JavaScriptCompiler.Parser.csproj", "{10DE214A-0179-457D-A4B3-8099F7F3C048}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JavaScriptCompiler.Console", "JavaScriptCompiler.Console\JavaScriptCompiler.Console.csproj", "{2EBBF7C7-C675-4C90-A838-CF76E27737C6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,10 +21,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{3E61B5F1-E6CD-4E59-B613-F6FA77F30E3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3E61B5F1-E6CD-4E59-B613-F6FA77F30E3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3E61B5F1-E6CD-4E59-B613-F6FA77F30E3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3E61B5F1-E6CD-4E59-B613-F6FA77F30E3B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EC7D6C00-73BB-41FB-B8D1-6A1E67B1761B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EC7D6C00-73BB-41FB-B8D1-6A1E67B1761B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EC7D6C00-73BB-41FB-B8D1-6A1E67B1761B}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -37,6 +33,10 @@ Global
 		{10DE214A-0179-457D-A4B3-8099F7F3C048}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{10DE214A-0179-457D-A4B3-8099F7F3C048}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{10DE214A-0179-457D-A4B3-8099F7F3C048}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2EBBF7C7-C675-4C90-A838-CF76E27737C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2EBBF7C7-C675-4C90-A838-CF76E27737C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2EBBF7C7-C675-4C90-A838-CF76E27737C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2EBBF7C7-C675-4C90-A838-CF76E27737C6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

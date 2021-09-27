@@ -3,6 +3,13 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <StartupObject>
+    </StartupObject>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\JavaScriptCompiler.Lexer\JavaScriptCompiler.Lexer.csproj" />
+  </ItemGroup>
 
 </Project>

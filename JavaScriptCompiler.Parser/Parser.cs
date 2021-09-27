@@ -20,7 +20,6 @@ namespace JavaScriptCompiler.Parser
 
         private void Program()
         {
-            Init();
             Block();
         }
         private void Block()
@@ -28,6 +27,7 @@ namespace JavaScriptCompiler.Parser
             Match(TokenType.OpenBrace);
             //EnvironmentManager.PushContext();
             Decls();
+            Stmts();
             Match(TokenType.CloseBrace);
             //EnvironmentManager.PopContext();
         }
@@ -35,8 +35,8 @@ namespace JavaScriptCompiler.Parser
        
         private void Stmts()
         {
-            if (this.lookAhead.TokenType == TokenType.OpenBrace)
-            {
+            if (this.lookAhead.TokenType != TokenType.CloseBrace)
+            {//{}
                 Stmt();
                 Stmts();
             }
@@ -44,7 +44,6 @@ namespace JavaScriptCompiler.Parser
 
         private void Stmt()
         {
-            Match(TokenType.OpenBrace);
             switch (this.lookAhead.TokenType)
             {
                 case TokenType.OpenBrace:
@@ -61,9 +60,42 @@ namespace JavaScriptCompiler.Parser
                     break;
                 case TokenType.Identifier:
                     Match(TokenType.Identifier);
+                    if (this.lookAhead.TokenType == TokenType.Assignation)
+                    {
+                        Assignation();
+                    }
+                    CallStmt();
                     break;
                 default:
-                    throw new ApplicationException("Unrecognized statement");
+                    Block();
+                    break;
+            }
+        }
+
+        private void CallStmt()
+        {
+            Match(TokenType.LeftParens);
+            OptParams();
+            Match(TokenType.RightParens);
+            Match(TokenType.SemiColon);
+        }
+
+        private void OptParams()
+        {
+            if (this.lookAhead.TokenType != TokenType.RightParens)
+            {
+                Params();
+            }
+        }
+
+        private void Params()
+        {
+            Eq();
+            if (this.lookAhead.TokenType == TokenType.Comma)
+            {
+                Match(TokenType.Comma);
+                //expression = new ArgumentExpression(lookAhead, expression as TypedExpression, Params() as TypedExpression);
+                //return expression;
             }
         }
 
@@ -190,7 +222,7 @@ namespace JavaScriptCompiler.Parser
 
         private void Assignation()
         {
-            Match(TokenType.Identifier);
+            Match(TokenType.Assignation);
             switch (this.lookAhead.TokenType)
             {
                 case TokenType.Assignation:
@@ -202,9 +234,11 @@ namespace JavaScriptCompiler.Parser
                     break;
                 case TokenType.Decrement:
                     Match(TokenType.Decrement);
+                    Match(TokenType.SemiColon);
                     break;
                 case TokenType.Increment:
                     Match(TokenType.Increment);
+                    Match(TokenType.SemiColon);
                     break;
             }
         }
@@ -218,7 +252,7 @@ namespace JavaScriptCompiler.Parser
                 || this.lookAhead.TokenType == TokenType.DateTimeKeyword)
             {
                 Decl();
-                InnerDecls();
+                Decls();
             }
         }
 
@@ -244,11 +278,6 @@ namespace JavaScriptCompiler.Parser
                     Match(TokenType.Identifier);
                     Match(TokenType.SemiColon);
                     break;
-                case TokenType.IntKeyword:
-                    Match(TokenType.IntKeyword);
-                    Match(TokenType.Identifier);
-                    Match(TokenType.SemiColon);
-                    break;
                 case TokenType.DateTimeKeyword:
                     Match(TokenType.DateTimeKeyword);
                     Match(TokenType.Identifier);
@@ -265,7 +294,10 @@ namespace JavaScriptCompiler.Parser
                     Match(TokenType.SemiColon);
                     break;
                 default:
-                    throw new ApplicationException($"Unsupported type {this.lookAhead.Lexeme}");
+                    Match(TokenType.IntKeyword);
+                    Match(TokenType.Identifier);
+                    Match(TokenType.SemiColon);
+                    break;
             }
         }
 
