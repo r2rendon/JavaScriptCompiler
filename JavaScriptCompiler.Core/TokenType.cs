@@ -48,6 +48,7 @@ namespace JavaScriptCompiler.Core
         Or,
         Increment,
         Decrement,
-        InKeyword
+        InKeyword,
+        BoolConstant
     }
 }

@@ -59,6 +59,9 @@ namespace JavaScriptCompiler.Parser
                 case TokenType.ForeachKeyword:
                     ForeachStatement();
                     break;
+                case TokenType.Identifier:
+                    Match(TokenType.Identifier);
+                    break;
                 default:
                     throw new ApplicationException("Unrecognized statement");
             }
@@ -73,7 +76,6 @@ namespace JavaScriptCompiler.Parser
             Match(TokenType.Identifier);
             Match(TokenType.RightParens);
             Block();
-            
         }
 
         private void IfStmt()
@@ -157,6 +159,9 @@ namespace JavaScriptCompiler.Parser
                 case TokenType.StringConstant:
                     Match(TokenType.StringConstant);
                     break;
+                case TokenType.BoolConstant:
+                    Match(TokenType.StringConstant);
+                    break;
                 default:
                     Match(TokenType.Identifier);
                     break;
@@ -206,8 +211,15 @@ namespace JavaScriptCompiler.Parser
 
         private void Decls()
         {
-            Decl();
-            InnerDecls();
+            if (this.lookAhead.TokenType == TokenType.IntKeyword
+                || this.lookAhead.TokenType == TokenType.FloatKeyword
+                || this.lookAhead.TokenType == TokenType.StringKeyword
+                || this.lookAhead.TokenType == TokenType.BoolKeyword
+                || this.lookAhead.TokenType == TokenType.DateTimeKeyword)
+            {
+                Decl();
+                InnerDecls();
+            }
         }
 
         private void InnerDecls()
@@ -244,6 +256,11 @@ namespace JavaScriptCompiler.Parser
                     break;
                 case TokenType.ClassKeyword:
                     Match(TokenType.ClassKeyword);
+                    Match(TokenType.Identifier);
+                    Match(TokenType.SemiColon);
+                    break;
+                case TokenType.BoolKeyword:
+                    Match(TokenType.BoolKeyword);
                     Match(TokenType.Identifier);
                     Match(TokenType.SemiColon);
                     break;
