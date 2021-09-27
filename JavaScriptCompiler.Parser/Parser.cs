@@ -4,6 +4,7 @@ using JavaScriptCompiler.Core.Interfaces;
 using JavaScriptCompiler.Core.Statements;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Type = JavaScriptCompiler.Core.Type;
 
@@ -45,6 +46,7 @@ namespace JavaScriptCompiler.Parser
             block.ValidateSemantic();
             var code = block.Generate(0);
             //code = code.Replace($"else:{Environment.NewLine}\tif", "elif");
+            //File.WriteAllText("code.js", code);
             Console.WriteLine(code);
             return block;
         }
@@ -383,8 +385,7 @@ namespace JavaScriptCompiler.Parser
                 //this.lookAhead.TokenType == TokenType.DateKeyword
                 )
             {
-               return Decl();
-               Decls();
+                return new SequenceStatement(Decl(), Decls());
             }
             return null;
         }
@@ -396,7 +397,6 @@ namespace JavaScriptCompiler.Parser
                 case TokenType.FloatKeyword:
                     Match(TokenType.FloatKeyword);
                     var token = lookAhead;
-                    var symbol = EnvironmentManager.GetSymbol(this.lookAhead.Lexeme);
                     Match(TokenType.Identifier);
                     Match(TokenType.SemiColon);
                     var id = new Id(token, Type.Float);

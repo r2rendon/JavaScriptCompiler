@@ -20,14 +20,14 @@ namespace JavaScriptCompiler.Core.Statements
         public override string Generate(int tabs)
         {
             var code = GetCodeInit(tabs);
-            code += $"if({Expression.Generate()}){{{Environment.NewLine}";
-            code += $"{TrueStatement.Generate(tabs + 1)}{Environment.NewLine}}}";
+            code += $"{Environment.NewLine}if({Expression.Generate()}){{{Environment.NewLine}";
+            code += $"{TrueStatement.Generate(tabs + 1)}}}";
             for (int i = 0; i < tabs; i++)
             {
                 code += "\t";
             }
             code += $"else{{{Environment.NewLine}";
-            code += $"{FalseStatement.Generate(tabs + 1)}{Environment.NewLine}}}{Environment.NewLine}";
+            code += $"{FalseStatement.Generate(tabs + 1)}}}{Environment.NewLine}";
             return code;
         }
 

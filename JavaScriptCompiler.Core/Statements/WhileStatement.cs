@@ -18,8 +18,8 @@ namespace JavaScriptCompiler.Core.Statements
         public override string Generate(int tabs)
         {
             var code = GetCodeInit(tabs);
-            code += $"while({Expression.Generate()}){{{Environment.NewLine}";
-            code += $"{Statement.Generate(tabs + 1)}{Environment.NewLine}}}{Environment.NewLine}";
+            code += $"{Environment.NewLine}while({Expression.Generate()}){{{Environment.NewLine}";
+            code += $"{Statement.Generate(tabs + 1)}}}{Environment.NewLine}";
             return code;
         }
 
