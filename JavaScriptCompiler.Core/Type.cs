@@ -22,6 +22,7 @@ namespace JavaScriptCompiler.Core
         public static Type String => new Type("string", TokenType.BasicType);
         public static Type Void => new Type("void", TokenType.BasicType);
         public static Type Date => new Type("datetime", TokenType.BasicType);
+        public static Type List => new Type("list", TokenType.BasicType);
 
 
         public bool Equals(Type other)

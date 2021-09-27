@@ -10,6 +10,7 @@ namespace JavaScriptCompiler.Lexer
     {
         private Input input;
         private readonly Dictionary<string, TokenType> keywords;
+        private readonly Dictionary<string, TokenType> stringConstants;
 
         public Scanner(Input input)
         {
@@ -25,7 +26,13 @@ namespace JavaScriptCompiler.Lexer
                 { "datetime", TokenType.DateTimeKeyword },
                 { "foreach", TokenType.DateTimeKeyword },
                 { "in", TokenType.InKeyword },
-                { "bool", TokenType.BoolKeyword }
+                { "bool", TokenType.BoolKeyword },
+                { "while", TokenType.WhileKeyword },
+            };
+            this.stringConstants = new Dictionary<string, TokenType>
+            {
+                { "true", TokenType.TrueKeyword  },
+                { "else", TokenType.FalseKeyword },
             };
         }
 
@@ -55,6 +62,16 @@ namespace JavaScriptCompiler.Lexer
                         return new Token
                         {
                             TokenType = this.keywords[lexeme.ToString()],
+                            Column = input.Position.Column,
+                            Line = input.Position.Line,
+                            Lexeme = lexeme.ToString()
+                        };
+                    }
+                    else if (this.stringConstants.ContainsKey(lexeme.ToString()))
+                    {
+                        return new Token
+                        {
+                            TokenType = this.stringConstants[lexeme.ToString()],
                             Column = input.Position.Column,
                             Line = input.Position.Line,
                             Lexeme = lexeme.ToString()

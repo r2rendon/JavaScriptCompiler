@@ -79,17 +79,22 @@ namespace JavaScriptCompiler.Parser
                     {
                         var symbol = EnvironmentManager.GetSymbol(this.lookAhead.Lexeme);
                         Match(TokenType.Identifier);
-                        if (this.lookAhead.TokenType == TokenType.Assignation)
+                        switch (this.lookAhead.TokenType)
                         {
-                            return AssignStmt(symbol.Id);
+                            case TokenType.Assignation:
+                                return AssignStmt(symbol.Id);
+                            case TokenType.Increment:
+                                return IncrementStmt(symbol.Id);
+                            case TokenType.Decrement:
+                                return DecrementStatement(symbol.Id);
+                            default:
+                                return CallStmt(symbol);
                         }
-                        return CallStmt(symbol);
                     }
                 case TokenType.IfKeyword:
                     {
                         Match(TokenType.IfKeyword);
                         Match(TokenType.LeftParens);
-                        //expression = Eq();
                         expression = Logical();
                         Match(TokenType.RightParens);
                         statement1 = Stmt();
@@ -101,9 +106,35 @@ namespace JavaScriptCompiler.Parser
                         statement2 = Stmt();
                         return new ElseStatement(expression as TypedExpression, statement1, statement2);
                     }
+                case TokenType.ForeachKeyword:
+                    return ForeachStatement();
+                case TokenType.WhileKeyword:
+                    {
+                        Match(TokenType.WhileKeyword);
+                        Match(TokenType.LeftParens);
+                        expression = Logical();
+                        Match(TokenType.RightParens);
+                        statement1 = Stmt();
+
+                        return new WhileStatement(expression as TypedExpression, statement1);
+                    }
                 default:
                     return Block();
             }
+        }
+
+        private Statement DecrementStatement(Id id)
+        {
+            Match(TokenType.Decrement);
+            Match(TokenType.SemiColon);
+            return new DecrementStatement(id);
+        }
+
+        private Statement IncrementStmt(Id id)
+        {
+            Match(TokenType.Increment);
+            Match(TokenType.SemiColon);
+            return new IncrementStatement(id);
         }
         private Expression Logical()
         {
@@ -178,7 +209,6 @@ namespace JavaScriptCompiler.Parser
                 case TokenType.LeftParens:
                     {
                         Match(TokenType.LeftParens);
-                        //var expression = Eq();
                         var expression = Logical();
                         Match(TokenType.RightParens);
                         return expression;
@@ -435,6 +465,35 @@ namespace JavaScriptCompiler.Parser
                     EnvironmentManager.AddVariable(token.Lexeme, id);
                     break;
             }
+        }
+
+        private Statement ForeachStatement()
+        {
+            //Match(TokenType.IfKeyword);
+            //Match(TokenType.LeftParens);
+            //expression = Logical();
+            //Match(TokenType.RightParens);
+            //statement1 = Stmt();
+            //if (this.lookAhead.TokenType != TokenType.ElseKeyword)
+            //{
+            //    return new IfStatement(expression as TypedExpression, statement1);
+            //}
+            //Match(TokenType.ElseKeyword);
+            //statement2 = Stmt();
+            //return new ElseStatement(expression as TypedExpression, statement1, statement2);
+            Match(TokenType.ForeachKeyword);
+            Match(TokenType.LeftParens);
+            var tmpVar = lookAhead;
+            var tmpVarSymbol = EnvironmentManager.GetSymbol(tmpVar.Lexeme);
+            Match(TokenType.Identifier);
+            Match(TokenType.InKeyword);
+            var array = lookAhead;
+            var arraySymbol = EnvironmentManager.GetSymbol(array.Lexeme);
+            Match(TokenType.Identifier);
+            Match(TokenType.RightParens);
+            var statement = Stmt();
+
+            return new ForeachStatement(tmpVarSymbol.Id, arraySymbol.Id, statement);
         }
 
         private void Move()

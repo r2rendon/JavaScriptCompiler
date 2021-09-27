@@ -27,7 +27,7 @@ namespace JavaScriptCompiler.Core.Statements
                 code += "\t";
             }
             code += $"else{{{Environment.NewLine}";
-            code += $"{FalseStatement.Generate(tabs + 1)}{Environment.NewLine}}}";
+            code += $"{FalseStatement.Generate(tabs + 1)}{Environment.NewLine}}}{Environment.NewLine}";
             return code;
         }
 

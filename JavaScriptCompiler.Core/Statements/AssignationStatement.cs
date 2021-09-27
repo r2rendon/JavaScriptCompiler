@@ -18,6 +18,7 @@ namespace JavaScriptCompiler.Core.Statements
         public override string Generate(int tabs)
         {
             var code = GetCodeInit(tabs);
+            var test = Expression.Generate();
             code += $"var {Id.Generate()} = {Expression.Generate()};{Environment.NewLine}";
             return code;
         }

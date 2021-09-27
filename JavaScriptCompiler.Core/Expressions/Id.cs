@@ -1,4 +1,6 @@
-﻿namespace JavaScriptCompiler.Core.Expressions
+﻿using System;
+
+namespace JavaScriptCompiler.Core.Expressions
 {
     public class Id : TypedExpression
     {
@@ -8,8 +10,7 @@
 
         public override dynamic Evaluate()
         {
-            //return EnvironmentManager.GetSymbolForEvaluation(Token.Lexeme).Value;
-            return "";
+            return EnvironmentManager.GetSymbolForEvaluation(Token.Lexeme).Value;
         }
 
         public override string Generate()

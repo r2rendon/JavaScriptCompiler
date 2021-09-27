@@ -4,9 +4,9 @@ using System;
 
 namespace JavaScriptCompiler.Core.Statements
 {
-    public class IfStatement : Statement
+    public class WhileStatement : Statement
     {
-        public IfStatement(TypedExpression expression, Statement statement)
+        public WhileStatement(TypedExpression expression, Statement statement)
         {
             Expression = expression;
             Statement = statement;
@@ -18,7 +18,7 @@ namespace JavaScriptCompiler.Core.Statements
         public override string Generate(int tabs)
         {
             var code = GetCodeInit(tabs);
-            code += $"if({Expression.Generate()}){{{Environment.NewLine}";
+            code += $"while({Expression.Generate()}){{{Environment.NewLine}";
             code += $"{Statement.Generate(tabs + 1)}{Environment.NewLine}}}{Environment.NewLine}";
             return code;
         }
@@ -35,7 +35,7 @@ namespace JavaScriptCompiler.Core.Statements
         {
             if (Expression.GetExpressionType() != Type.Bool)
             {
-                throw new ApplicationException("A boolean is required in ifs");
+                throw new ApplicationException("A boolean is required in a while");
             }
         }
     }
