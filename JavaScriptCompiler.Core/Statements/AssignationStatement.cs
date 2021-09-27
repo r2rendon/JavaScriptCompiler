@@ -19,7 +19,7 @@ namespace JavaScriptCompiler.Core.Statements
         {
             var code = GetCodeInit(tabs);
             var test = Expression.Generate();
-            code += $"var {Id.Generate()} = {Expression.Generate()};{Environment.NewLine}";
+            code += $"{Id.Generate()} = {Expression.Generate()};{Environment.NewLine}";
             return code;
         }
 

@@ -53,11 +53,12 @@ namespace JavaScriptCompiler.Parser
         {
             Match(TokenType.OpenBrace);
             EnvironmentManager.PushContext();
-            Decls();
+            var stat = Decls();
             var statements = Stmts();
             Match(TokenType.CloseBrace);
             EnvironmentManager.PopContext();
-            return statements;
+            return new SequenceStatement(stat, statements);
+            
         }
 
         private Statement Stmts()
@@ -372,7 +373,7 @@ namespace JavaScriptCompiler.Parser
             return new AssignationStatement(id, expression as TypedExpression);
         }
 
-        private void Decls()
+        private Statement Decls()
         {
             if (this.lookAhead.TokenType == TokenType.IntKeyword ||
                 //this.lookAhead.TokenType == TokenType.ListKeyword ||
@@ -382,23 +383,26 @@ namespace JavaScriptCompiler.Parser
                 //this.lookAhead.TokenType == TokenType.DateKeyword
                 )
             {
-                Decl();
-                Decls();
+               return Decl();
+               Decls();
             }
+            return null;
         }
 
-        private void Decl()
+        private Statement Decl()
         {
             switch (this.lookAhead.TokenType)
             {
                 case TokenType.FloatKeyword:
                     Match(TokenType.FloatKeyword);
                     var token = lookAhead;
+                    var symbol = EnvironmentManager.GetSymbol(this.lookAhead.Lexeme);
                     Match(TokenType.Identifier);
                     Match(TokenType.SemiColon);
                     var id = new Id(token, Type.Float);
                     EnvironmentManager.AddVariable(token.Lexeme, id);
-                    break;
+                    return new DeclarationStatement(id);
+                    
 
                 //case TokenType.FloatListKeyword:
                 //    Match(TokenType.FloatKeyword);
@@ -415,7 +419,8 @@ namespace JavaScriptCompiler.Parser
                     Match(TokenType.SemiColon);
                     id = new Id(token, Type.String);
                     EnvironmentManager.AddVariable(token.Lexeme, id);
-                    break;
+                    return new DeclarationStatement(id);
+                  
                 //case TokenType.StringListKeyword:
                 //    Match(TokenType.StringListKeyword);
                 //    token = lookAhead;
@@ -431,7 +436,8 @@ namespace JavaScriptCompiler.Parser
                     Match(TokenType.SemiColon);
                     id = new Id(token, Type.Date);
                     EnvironmentManager.AddVariable(token.Lexeme, id);
-                    break;
+                    return new DeclarationStatement (id);
+                  
                 case TokenType.BoolKeyword:
                     Match(TokenType.BoolKeyword);
                     token = lookAhead;
@@ -439,7 +445,8 @@ namespace JavaScriptCompiler.Parser
                     Match(TokenType.SemiColon);
                     id = new Id(token, Type.Bool);
                     EnvironmentManager.AddVariable(token.Lexeme, id);
-                    break;
+                    return new DeclarationStatement(id);
+                  
                 //case TokenType.BoolListConstant:
                 //    Match(TokenType.BoolListKeyword);
                 //    token = lookAhead;
@@ -463,7 +470,8 @@ namespace JavaScriptCompiler.Parser
                     Match(TokenType.SemiColon);
                     id = new Id(token, Type.Int);
                     EnvironmentManager.AddVariable(token.Lexeme, id);
-                    break;
+                    return new DeclarationStatement(id);
+               
             }
         }
 
