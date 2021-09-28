@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace JavaScriptCompiler.Core.Expressions
@@ -14,19 +15,23 @@ namespace JavaScriptCompiler.Core.Expressions
 
         public string Lexeme { get; }
 
+        private int tmpInt;
+        private float tmpFloat;
+        private bool tmpBool;
+
         public override dynamic Evaluate()
         {
             Console.WriteLine(type.Lexeme.ToString());
             switch (type.Lexeme.ToString())
             {
-                case "datetime":
-                    return DateTime.Parse(Lexeme);
                 case "list<int>":
-                    return Lexeme;
-                case "year":
-                case "month":
-                case "day":
-                    return int.Parse(Lexeme);
+                    return Lexeme.Split(',').Where(m => int.TryParse(m, out tmpInt)).Select(m => int.Parse(m)).ToList();
+                case "list<float>":
+                    return Lexeme.Split(',').Where(m => float.TryParse(m, out tmpFloat)).Select(m => int.Parse(m)).ToList();
+                case "list<string>":
+                    return Lexeme.Split(',').ToList();
+                case "list<bool>":
+                    return Lexeme.Split(',').Where(m => bool.TryParse(m, out tmpBool)).Select(m => int.Parse(m)).ToList();
                 default:
                     return null;
             }
@@ -35,10 +40,9 @@ namespace JavaScriptCompiler.Core.Expressions
 
         public override string Generate()
         {
-            if (Token.TokenType == TokenType.DateTimeConstant)
+            if (Token.TokenType == TokenType.ListKeyword)
             {
-
-                return $"new {Token.Lexeme}{Lexeme.ToString().Substring(0, 3)}/{Lexeme.Substring(3, 2)}/{Lexeme.Substring(5, 5)}";
+                return $"[{Lexeme}]";
             }
             return Token.Lexeme;
         }

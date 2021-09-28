@@ -24,10 +24,11 @@ namespace JavaScriptCompiler.Lexer
                 { "string", TokenType.StringKeyword },
                 { "class", TokenType.ClassKeyword },
                 { "datetime", TokenType.DateTimeKeyword },
-                { "foreach", TokenType.DateTimeKeyword },
+                { "foreach", TokenType.ForeachKeyword },
                 { "in", TokenType.InKeyword },
                 { "bool", TokenType.BoolKeyword },
                 { "while", TokenType.WhileKeyword },
+                { "list", TokenType.ListKeyword },
             };
             this.stringConstants = new Dictionary<string, TokenType>
             {
@@ -50,7 +51,7 @@ namespace JavaScriptCompiler.Lexer
                 {
                     lexeme.Append(currentChar);
                     currentChar = PeekNextChar();
-                    while (char.IsLetterOrDigit(currentChar))
+                    while (char.IsLetterOrDigit(currentChar) || currentChar == '.')
                     {
                         currentChar = GetNextChar();
                         lexeme.Append(currentChar);
@@ -416,6 +417,40 @@ namespace JavaScriptCompiler.Lexer
                             return new Token
                             {
                                 TokenType = TokenType.Or,
+                                Column = input.Position.Column,
+                                Line = input.Position.Line,
+                                Lexeme = lexeme.ToString()
+                            };
+                        case '[':
+                            lexeme.Append(currentChar);
+                            return new Token
+                            {
+                                TokenType = TokenType.LeftBracket,
+                                Column = input.Position.Column,
+                                Line = input.Position.Line,
+                                Lexeme = lexeme.ToString()
+                            };
+                        case ']':
+                            lexeme.Append(currentChar);
+                            return new Token
+                            {
+                                TokenType = TokenType.RightBracket,
+                                Column = input.Position.Column,
+                                Line = input.Position.Line,
+                                Lexeme = lexeme.ToString()
+                            };
+                        case '"':
+                            lexeme.Append(currentChar);
+                            currentChar = GetNextChar();
+                            while (currentChar != '"')
+                            {
+                                lexeme.Append(currentChar);
+                                currentChar = GetNextChar();
+                            }
+                            lexeme.Append(currentChar);
+                            return new Token
+                            {
+                                TokenType = TokenType.StringConstant,
                                 Column = input.Position.Column,
                                 Line = input.Position.Line,
                                 Lexeme = lexeme.ToString()

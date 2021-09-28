@@ -20,7 +20,11 @@ namespace JavaScriptCompiler.Core.Statements
         public override void Interpret()
         {
             var method = EnvironmentManager.GetSymbolForEvaluation(Id.Token.Lexeme);
-            if (method.Id.Token.Lexeme == "print")
+            if (method.Id.Token.Lexeme == "Console.WriteLine")
+            {
+                InnerEvaluate(Arguments);
+            } 
+            else if (method.Id.Token.Lexeme == "Console.ReadLine")
             {
                 InnerEvaluate(Arguments);
             }

@@ -29,9 +29,22 @@ namespace JavaScriptCompiler.Parser
         private Statement Program()
         {
             EnvironmentManager.PushContext();
-            EnvironmentManager.AddMethod("print", new Id(new Token
+            EnvironmentManager.AddMethod("Console.WriteLine", new Id(new Token
             {
-                Lexeme = "print",
+                Lexeme = "console.log",
+            }, Type.Void),
+            new ArgumentExpression(new Token
+            {
+                Lexeme = ""
+            },
+            new Id(new Token
+            {
+                Lexeme = "arg1"
+            }, Type.String)));
+
+            EnvironmentManager.AddMethod("Console.ReadLine", new Id(new Token
+            {
+                Lexeme = "window.prompt",
             }, Type.Void),
             new ArgumentExpression(new Token
             {
@@ -236,7 +249,7 @@ namespace JavaScriptCompiler.Parser
                     Match(TokenType.Distinct);
                     return Logical();
                 case TokenType.DateTimeConstant:
-                    var token2 = this.lookAhead;
+                    var token = this.lookAhead;
                     List<Token> list = new List<Token>();
                     //list.Add(lookAhead);
                     Match(TokenType.DateTimeConstant);
@@ -254,80 +267,89 @@ namespace JavaScriptCompiler.Parser
                     Match(TokenType.IntConstant);
                     list.Add(lookAhead);
                     Match(TokenType.RightParens);
-                    return new ConstantExpression(token2, Type.Date, string.Concat(list.Select(x => x.Lexeme)));
-                //case TokenType.IntListConstant:
-                //    token2 = this.lookAhead;
-                //    list = new List<Token>();
-                //    //list.Add(lookAhead);
-                //    Match(TokenType.IntListConstant);
-                //    list.Add(lookAhead);
-                //    Match(TokenType.LeftParens);
-                //    list.Add(lookAhead);
-                //    Match(TokenType.IntConstant);
-                //    while (lookAhead.TokenType != TokenType.RightParens)
-                //    {
-                //        list.Add(lookAhead);
-                //        Match(TokenType.Comma);
-                //        list.Add(lookAhead);
-                //        Match(TokenType.IntConstant);
-                //    }
-                //    list.Add(lookAhead);
-                //    Match(TokenType.RightParens);
-                //    return new ConstantExpression(null, Type.Int, string.Concat(list.Select(x => x.Lexeme)));
-                //case TokenType.FloatListConstant:
-                //    list = new List<Token>();
-                //    list.Add(lookAhead);
-                //    Match(TokenType.FloatListConstant);
-                //    list.Add(lookAhead);
-                //    Match(TokenType.LeftParens);
-                //    list.Add(lookAhead);
-                //    Match(TokenType.FloatConstant);
-                //    while (lookAhead.TokenType != TokenType.RightParens)
-                //    {
-                //        list.Add(lookAhead);
-                //        Match(TokenType.Comma);
-                //        list.Add(lookAhead);
-                //        Match(TokenType.FloatConstant);
-                //    }
-                //    list.Add(lookAhead);
-                //    Match(TokenType.RightParens);
-                //    return new ConstantExpression(null, Type.Float, string.Concat(list.Select(x => x.Lexeme)));
-                //case TokenType.BoolListConstant:
-                //    list = new List<Token>();
-                //    list.Add(lookAhead);
-                //    Match(TokenType.BoolListConstant);
-                //    list.Add(lookAhead);
-                //    Match(TokenType.LeftParens);
-                //    list.Add(lookAhead);
-                //    Match(TokenType.BoolConstant);
-                //    while (lookAhead.TokenType != TokenType.RightParens)
-                //    {
-                //        list.Add(lookAhead);
-                //        Match(TokenType.Comma);
-                //        list.Add(lookAhead);
-                //        Match(TokenType.BoolConstant);
-                //    }
-                //    list.Add(lookAhead);
-                //    Match(TokenType.RightParens);
-                //    return new ConstantExpression(null, Type.Bool, string.Concat(list.Select(x => x.Lexeme)));
-                //case TokenType.StringListConstant:
-                //    list = new List<Token>();
-                //    list.Add(lookAhead);
-                //    Match(TokenType.StringListConstant);
-                //    list.Add(lookAhead);
-                //    Match(TokenType.LeftParens);
-                //    list.Add(lookAhead);
-                //    Match(TokenType.StringConstant);
-                //    while (lookAhead.TokenType != TokenType.RightParens)
-                //    {
-                //        list.Add(lookAhead);
-                //        Match(TokenType.Comma);
-                //        list.Add(lookAhead);
-                //        Match(TokenType.StringConstant);
-                //    }
-                //    list.Add(lookAhead);
-                //    Match(TokenType.RightParens);
-                //    return new ConstantExpression(null, Type.String, string.Concat(list.Select(x => x.Lexeme)));
+                    return new ConstantExpression(token, Type.Date, string.Concat(list.Select(x => x.Lexeme)));
+                case TokenType.ListKeyword:
+                    {
+                        token = lookAhead;
+                        list = new List<Token>();
+                        Match(TokenType.ListKeyword);
+                        Match(TokenType.LessThan);
+                        var listType = lookAhead;
+                        switch (listType.TokenType)
+                        {
+                            case TokenType.IntKeyword:
+                                Match(TokenType.IntKeyword);
+                                break;
+                            case TokenType.FloatKeyword:
+                                Match(TokenType.FloatKeyword);
+                                break;
+                            case TokenType.BoolKeyword:
+                                Match(TokenType.BoolKeyword);
+                                break;
+                            case TokenType.StringKeyword:
+                                Match(TokenType.StringKeyword);
+                                break;
+                            default:
+                                // Array type not recognized
+                                break;
+                        }
+                        Match(TokenType.GreaterThan);
+                        Match(TokenType.LeftParens);
+                        list.Add(lookAhead);
+                        switch (listType.TokenType)
+                        {
+                            case TokenType.FloatKeyword:
+                                {
+                                    Match(TokenType.FloatConstant);
+                                    while (lookAhead.TokenType != TokenType.RightParens)
+                                    {
+                                        list.Add(lookAhead);
+                                        Match(TokenType.Comma);
+                                        list.Add(lookAhead);
+                                        Match(TokenType.FloatConstant);
+                                    }
+                                    Match(TokenType.RightParens);
+                                    return new ConstantExpression(token, Type.FloatList, string.Concat(list.Select(x => x.Lexeme)));
+                                }
+                            case TokenType.StringKeyword:
+                                {
+                                    Match(TokenType.StringConstant);
+                                    while (lookAhead.TokenType != TokenType.RightParens)
+                                    {
+                                        list.Add(lookAhead);
+                                        Match(TokenType.Comma);
+                                        list.Add(lookAhead);
+                                        Match(TokenType.StringConstant);
+                                    }
+                                    Match(TokenType.RightParens);
+                                    return new ConstantExpression(token, Type.StringList, string.Concat(list.Select(x => x.Lexeme)));
+                                }
+                            case TokenType.BoolKeyword:
+                                {
+                                    Match(TokenType.BoolConstant);
+                                    while (lookAhead.TokenType != TokenType.RightParens)
+                                    {
+                                        list.Add(lookAhead);
+                                        Match(TokenType.Comma);
+                                        list.Add(lookAhead);
+                                        Match(TokenType.BoolConstant);
+                                    }
+                                    Match(TokenType.RightParens);
+                                    return new ConstantExpression(token, Type.BoolList, string.Concat(list.Select(x => x.Lexeme)));
+                                }
+                            default:
+                                Match(TokenType.IntConstant);
+                                while (lookAhead.TokenType != TokenType.RightParens)
+                                {
+                                    list.Add(lookAhead);
+                                    Match(TokenType.Comma);
+                                    list.Add(lookAhead);
+                                    Match(TokenType.IntConstant);
+                                }
+                                Match(TokenType.RightParens);
+                                return new ConstantExpression(token, Type.IntList, string.Concat(list.Select(x => x.Lexeme)));
+                        }
+                    }
                 default:
                     var symbol = EnvironmentManager.GetSymbol(this.lookAhead.Lexeme);
                     Match(TokenType.Identifier);
@@ -378,7 +400,7 @@ namespace JavaScriptCompiler.Parser
         private Statement Decls()
         {
             if (this.lookAhead.TokenType == TokenType.IntKeyword ||
-                //this.lookAhead.TokenType == TokenType.ListKeyword ||
+                this.lookAhead.TokenType == TokenType.ListKeyword ||
                 this.lookAhead.TokenType == TokenType.FloatKeyword ||
                 this.lookAhead.TokenType == TokenType.StringKeyword ||
                 this.lookAhead.TokenType == TokenType.BoolKeyword
@@ -402,16 +424,6 @@ namespace JavaScriptCompiler.Parser
                     var id = new Id(token, Type.Float);
                     EnvironmentManager.AddVariable(token.Lexeme, id);
                     return new DeclarationStatement(id);
-                    
-
-                //case TokenType.FloatListKeyword:
-                //    Match(TokenType.FloatKeyword);
-                //    token = lookAhead;
-                //    Match(TokenType.Identifier);
-                //    Match(TokenType.SemiColon);
-                //    id = new Id(token, Type.ListFloat);
-                //    EnvironmentManager.AddVariable(token.Lexeme, id);
-                //    break;
                 case TokenType.StringKeyword:
                     Match(TokenType.StringKeyword);
                     token = lookAhead;
@@ -420,15 +432,6 @@ namespace JavaScriptCompiler.Parser
                     id = new Id(token, Type.String);
                     EnvironmentManager.AddVariable(token.Lexeme, id);
                     return new DeclarationStatement(id);
-                  
-                //case TokenType.StringListKeyword:
-                //    Match(TokenType.StringListKeyword);
-                //    token = lookAhead;
-                //    Match(TokenType.Identifier);
-                //    Match(TokenType.SemiColon);
-                //    id = new Id(token, Type.ListString);
-                //    EnvironmentManager.AddVariable(token.Lexeme, id);
-                //    break;
                 case TokenType.DateTimeKeyword:
                     Match(TokenType.DateTimeKeyword);
                     token = lookAhead;
@@ -437,7 +440,6 @@ namespace JavaScriptCompiler.Parser
                     id = new Id(token, Type.Date);
                     EnvironmentManager.AddVariable(token.Lexeme, id);
                     return new DeclarationStatement (id);
-                  
                 case TokenType.BoolKeyword:
                     Match(TokenType.BoolKeyword);
                     token = lookAhead;
@@ -446,23 +448,51 @@ namespace JavaScriptCompiler.Parser
                     id = new Id(token, Type.Bool);
                     EnvironmentManager.AddVariable(token.Lexeme, id);
                     return new DeclarationStatement(id);
-                  
-                //case TokenType.BoolListConstant:
-                //    Match(TokenType.BoolListKeyword);
-                //    token = lookAhead;
-                //    Match(TokenType.Identifier);
-                //    Match(TokenType.SemiColon);
-                //    id = new Id(token, Type.ListBool);
-                //    EnvironmentManager.AddVariable(token.Lexeme, id);
-                //    break;
-                //case TokenType.IntListConstant:
-                //    Match(TokenType.IntListKeyword);
-                //    token = lookAhead;
-                //    Match(TokenType.Identifier);
-                //    Match(TokenType.SemiColon);
-                //    id = new Id(token, Type.ListInt);
-                //    EnvironmentManager.AddVariable(token.Lexeme, id);
-                //    break;
+                case TokenType.ListKeyword:
+                    {
+                        Match(TokenType.ListKeyword);
+                        Match(TokenType.LessThan);
+                        var listType = lookAhead;
+                        switch (listType.TokenType)
+                        {
+                            case TokenType.FloatKeyword:
+                                Match(TokenType.FloatKeyword);
+                                Match(TokenType.GreaterThan);
+                                token = lookAhead;
+                                Match(TokenType.Identifier);
+                                Match(TokenType.SemiColon);
+                                id = new Id(token, Type.FloatList);
+                                break;
+                            case TokenType.StringKeyword:
+                                Match(TokenType.StringKeyword);
+                                Match(TokenType.GreaterThan);
+                                token = lookAhead;
+                                Match(TokenType.Identifier);
+                                Match(TokenType.SemiColon);
+                                id = new Id(token, Type.StringList);
+                                break;
+                            case TokenType.BoolKeyword:
+                                Match(TokenType.BoolKeyword);
+                                Match(TokenType.GreaterThan);
+                                token = lookAhead;
+                                Match(TokenType.Identifier);
+                                Match(TokenType.SemiColon);
+                                id = new Id(token, Type.BoolList);
+                                break;
+                            default:
+                                Match(TokenType.IntKeyword);
+                                Match(TokenType.GreaterThan);
+                                token = lookAhead;
+                                Match(TokenType.Identifier);
+                                Match(TokenType.SemiColon);
+                                id = new Id(token, Type.IntList);
+                                break;
+                        }
+
+                        EnvironmentManager.AddVariable(token.Lexeme, id);
+                        return new DeclarationStatement(id);
+
+                    }
                 default:
                     Match(TokenType.IntKeyword);
                     token = lookAhead;

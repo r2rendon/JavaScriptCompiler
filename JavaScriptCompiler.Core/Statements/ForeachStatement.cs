@@ -20,7 +20,7 @@ namespace JavaScriptCompiler.Core.Statements
         public override string Generate(int tabs)
         {
             var code = GetCodeInit(tabs);
-            code += $"{this.ArrayVar.Generate()}.forEach(({this.TmpVar.Generate()}) => ){{{Environment.NewLine}";
+            code += $"{this.ArrayVar.Generate()}.forEach(({this.TmpVar.Generate()}) => ({{{Environment.NewLine}";
             code += $"{this.Statement.Generate(tabs+1)}{Environment.NewLine}";
             code += $"}});{Environment.NewLine}";
             return code;
@@ -36,7 +36,10 @@ namespace JavaScriptCompiler.Core.Statements
 
         public override void ValidateSemantic()
         {
-            if (ArrayVar.GetExpressionType() != Type.List)
+            if (ArrayVar.GetExpressionType() != Type.IntList
+                && ArrayVar.GetExpressionType() != Type.StringList
+                && ArrayVar.GetExpressionType() != Type.FloatList
+                && ArrayVar.GetExpressionType() != Type.BoolList)
             {
                 throw new ApplicationException($"Type: {ArrayVar.GetExpressionType()} is not iterable");
             }

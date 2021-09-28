@@ -9,7 +9,6 @@ namespace JavaScriptCompiler.Core.Statements
         public DeclarationStatement(Id id)
         {
             Id = id;
-          
         }
 
         public Id Id { get; }
@@ -28,7 +27,14 @@ namespace JavaScriptCompiler.Core.Statements
 
         public override void ValidateSemantic()
         {
-            if (Id.GetExpressionType() != Type.Int && Id.GetExpressionType() != Type.Bool && Id.GetExpressionType() != Type.Float && Id.GetExpressionType() != Type.String)
+            if (Id.GetExpressionType() != Type.Int 
+                && Id.GetExpressionType() != Type.Bool 
+                && Id.GetExpressionType() != Type.Float 
+                && Id.GetExpressionType() != Type.String
+                && Id.GetExpressionType() != Type.IntList
+                && Id.GetExpressionType() != Type.FloatList
+                && Id.GetExpressionType() != Type.StringList
+                && Id.GetExpressionType() != Type.BoolList)
             {
                 throw new ApplicationException($"Type {Id.GetExpressionType()} is not a declarable type.");
             }
