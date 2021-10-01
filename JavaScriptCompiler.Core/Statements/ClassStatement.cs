@@ -5,17 +5,17 @@ using System.Text;
 
 namespace JavaScriptCompiler.Core.Statements
 {
-    class ClassStatement : Statement
+    public class ClassStatement : Statement
     {
-        public ClassStatement(Id iD, Statement state)
+        public ClassStatement(Id id, Statement statement)
         {
-            this.iD = iD;
-            this.state = state;
+            this.id = id;
+            this.statement = statement;
         }
 
-        public Id iD { get; }
+        public Id id { get; }
 
-        public Statement state { get; }
+        public Statement statement { get; }
 
 
         public override string Generate(int tabs)
@@ -23,20 +23,20 @@ namespace JavaScriptCompiler.Core.Statements
             var key = "{";
             var closeKey = "}";
             var code = GetCodeInit(tabs);
-            code += $"class {iD.Generate()}{key}{Environment.NewLine}";
+            code += $"{Environment.NewLine}class {id.Generate()}{key}{Environment.NewLine}";
             code += GetCodeInit(tabs);
-            code += $"{state.Generate(tabs)}{closeKey}{Environment.NewLine}";
+            code += $"{statement.Generate(tabs)}{closeKey}{Environment.NewLine}";
             return code;
         }
 
         public override void Interpret()
         {
-            state.Interpret();
+            statement.Interpret();
         }
 
         public override void ValidateSemantic()
         {
-            state.ValidateSemantic();
+            statement.ValidateSemantic();
         }
     }
 }

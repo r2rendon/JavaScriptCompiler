@@ -20,9 +20,9 @@ namespace JavaScriptCompiler.Core.Statements
         public override string Generate(int tabs)
         {
             var code = GetCodeInit(tabs);
-            code += $"{this.ArrayVar.Generate()}.forEach(({this.TmpVar.Generate()}) => ({{{Environment.NewLine}";
+            code += $"{Environment.NewLine}{this.ArrayVar.Generate()}.forEach(({this.TmpVar.Generate()}) => {{{Environment.NewLine}";
             code += $"{this.Statement.Generate(tabs+1)}{Environment.NewLine}";
-            code += $"}});{Environment.NewLine}";
+            code += $"}};{Environment.NewLine}";
             return code;
         }
 

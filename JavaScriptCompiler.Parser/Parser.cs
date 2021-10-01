@@ -52,14 +52,14 @@ namespace JavaScriptCompiler.Parser
             },
             new Id(new Token
             {
-                Lexeme = "arg1"
+                Lexeme = ""
             }, Type.String)));
 
             var block = Block();
             block.ValidateSemantic();
             var code = block.Generate(0);
             //code = code.Replace($"else:{Environment.NewLine}\tif", "elif");
-            //File.WriteAllText("code.js", code);
+            File.WriteAllText("code.js", code);
             Console.WriteLine(code);
             return block;
         }
@@ -133,6 +133,17 @@ namespace JavaScriptCompiler.Parser
                         statement1 = Stmt();
 
                         return new WhileStatement(expression as TypedExpression, statement1);
+                    }
+                case TokenType.ClassKeyword:
+                    {
+                        Match(TokenType.ClassKeyword);
+                        var classToken = lookAhead;
+                        var id = new Id(classToken, Type.Void);
+                        Match(TokenType.Identifier);
+                        EnvironmentManager.PushContext();
+                        var classState = Stmts();
+                        EnvironmentManager.PopContext();
+                        return new ClassStatement(id, classState);
                     }
                 default:
                     return Block();
